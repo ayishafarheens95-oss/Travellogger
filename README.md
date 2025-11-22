@@ -1,92 +1,199 @@
-# Getting Started with Create React App
+TravelLogger
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Log your trips and revisit beautiful memories.
 
-## Available Scripts
+Project overview
 
-In the project directory, you can run:
+TravelLogger is a simple full-stack web application that lets users create, save, and view trip entries. Each trip contains a title, location, start and end dates, notes, and a rating. The frontend is built with React and modern CSS for a clean, card-based UI. The backend is built with Node.js + Express and uses MongoDB (via Mongoose) to persist trip data.
 
-### `npm start`
+Key features:-
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+Add trips with title, location, dates, notes, and a rating
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+View all saved trips in a clean list/card layout
 
-### `npm test`
+Frontend ↔ Backend communication through REST APIs (GET /api/trips, POST /api/trips)
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+Single-repo friendly structure (client/ + server/) and easy deployment options
 
-### `npm run build`
+Screenshot
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+![TravelLogger screenshot](/mnt/data/Screenshot 2025-11-22 105259.png)
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+Tech stack
 
-## Running Frontend + Backend Together
+Frontend: React
 
-- Install root (frontend) deps:
+Styling: CSS (custom styles, gradients, shadows)
 
-```powershell
+Backend: Node.js, Express.js
+
+Database: MongoDB (Mongoose)
+
+Dev tools: npm, Vite or Create React App (adjust instructions below if using CRA)
+
+Live demo
+
+Live deployment (replace with your actual link):
+netlify link: https://travelloger.netlify.app
+
+
+
+Repository structure (recommended)
+root/
+  client/        # React frontend
+  server/        # Express backend
+  README.md
+  .gitignore
+
+Setup & installation (development)
+
+The instructions below assume you have node and npm installed and that you cloned the repository to your machine.
+
+1. Clone the repository
+git clone <https://github.com/ayishafarheens95-oss/Travellogger.git>
+
+
+2. Install frontend dependencies
+cd client
 npm install
-```
 
-- Install backend deps (from project root):
+3. Install backend dependencies
 
-```powershell
-npm install --prefix Backend
-```
+Open a second terminal (or go back after step 2):
 
-- Start both dev servers from project root:
+cd server
+npm install
 
-```powershell
-npm run dev
-```
+4. Environment variables
 
-This runs the backend with `nodemon` on port `5000` and the frontend on port `3000`. The React dev server proxies API requests to the backend using the `proxy` setting.
+Create .env in server/ with something like:
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+PORT=5000
 
-### `npm run eject`
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+If the frontend uses environment variables (Vite or CRA), create .env in client/:
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+For Vite:
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+VITE_API_URL=http://localhost:5000
 
-## Learn More
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+For CRA:
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+REACT_APP_API_URL=http://localhost:5000
 
-### Code Splitting
+5. Run backend (dev)
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+From server/:
 
-### Analyzing the Bundle Size
+npm run dev   # or: node server.js (or nodemon server.js if you have nodemon)
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+6. Run frontend (dev)
 
-### Making a Progressive Web App
+From client/:
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+npm run dev   # Vite
+# OR
+npm start     # CRA
 
-### Advanced Configuration
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+Now open the frontend URL (Vite typically: http://localhost:5173, CRA: http://localhost:3000). The frontend will call the backend at http://localhost:5000 (or whatever PORT you set).
 
-### Deployment
+Build & production (single-app: serve frontend from Express)
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+If you want to deploy as one app (backend serves static frontend):
 
-### `npm run build` fails to minify
+Build frontend:
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+cd client
+npm run build   # Vite -> dist/     CRA -> build/
+
+
+Copy build files into server/public (example for Vite -> dist):
+
+# from repo root
+rm -rf server/public
+mkdir -p server/public
+cp -r client/dist/* server/public/   # for CRA: cp -r client/build/* server/public/
+
+
+Ensure server/server.js serves static files and has SPA fallback:
+
+// server/server.js (example)
+import express from 'express';
+import path from 'path';
+const app = express();
+
+app.use(express.json());
+
+// API routes
+app.use('/api/trips', tripsRouter);
+
+// Serve frontend
+const publicPath = path.join(__dirname, 'public');
+app.use(express.static(publicPath));
+app.get('*', (req, res) => {
+  res.sendFile(path.join(publicPath, 'index.html'));
+});
+
+app.listen(process.env.PORT || 5000);
+
+
+Run the server:
+
+cd server
+node server.js
+
+
+Your app is now accessible from the single server URL (e.g., https://your-domain.com).
+
+Deploying (short guide)
+Option A — Deploy frontend & backend separately
+
+Deploy frontend to Netlify or Vercel (upload dist/ or build/).
+
+Deploy backend to Heroku, Render, Railway, or DigitalOcean App Platform.
+
+Set frontend VITE_API_URL / REACT_APP_API_URL to the backend’s production URL.
+
+Allow CORS in backend for frontend origin.
+
+Option B — Deploy single app (backend serves static files)
+
+Build frontend and copy files to server/public (see above).
+
+Deploy the backend repo to a platform that supports Node.js (Heroku, Render, Railway).
+
+The server will serve both API and frontend from the same origin (recommended if you want just one deployment).
+
+API Endpoints
+
+GET /api/trips — returns JSON array of all trips
+
+POST /api/trips — accepts JSON body { title, location, startDate, endDate, notes, rating } and saves a trip
+
+Adjust endpoints as implemented in your server/ code. If you have auth or more endpoints, list them here.
+
+Troubleshooting & common tips
+
+If you see CORS errors during development, either:
+
+Use a dev proxy in the frontend (Vite dev server proxy or CRA proxy), or
+
+Enable CORS in Express: npm i cors and app.use(cors({ origin: 'http://localhost:5173' }))
+
+If SPA routes show 404 after refresh in production, make sure your server has the SPA fallback to index.html.
+
+For production DB, use a managed MongoDB (Atlas) and secure your connection string.
+
+Contributing
+
+Fork the repo
+
+Create a feature branch (git checkout -b feature/your-feature)
+
+Commit your changes (git commit -m "Add feature")
+
+Push and open a Pull Request
