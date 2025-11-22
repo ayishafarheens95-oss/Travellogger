@@ -27,6 +27,28 @@ It correctly bundles React in production mode and optimizes the build for the be
 The build is minified and the filenames include the hashes.\
 Your app is ready to be deployed!
 
+## Running Frontend + Backend Together
+
+- Install root (frontend) deps:
+
+```powershell
+npm install
+```
+
+- Install backend deps (from project root):
+
+```powershell
+npm install --prefix Backend
+```
+
+- Start both dev servers from project root:
+
+```powershell
+npm run dev
+```
+
+This runs the backend with `nodemon` on port `5000` and the frontend on port `3000`. The React dev server proxies API requests to the backend using the `proxy` setting.
+
 See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
 
 ### `npm run eject`
